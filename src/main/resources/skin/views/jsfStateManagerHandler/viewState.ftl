@@ -64,20 +64,25 @@
 <script src="http://code.jquery.com/jquery-latest.min.js"
         type="text/javascript"></script>
 <script>
-jQuery(document).ready(
-    function() {
-      jQuery("#stateDetail tr.nodeDetail").each(function(index, value){
-        var nodeClassText = this.find("td.nodeClass").text();
-        if (nodeClassText.indexOf('UIAliasHolder') >= 0) {
-          var nodePath = this.find("td.nodePath");
-          var nodePathText = nodePath.text();
-          nodePath.html("<a href='site/sessionInspector/jsfStateManager/uiAliasHolder/" + ${viewId}
-              + "/" + ${sequenceId} + "/" + nodePath + "'  target='_blank' >" + nodePathText + "</a>");
-        }
-      }
-      );
-    });
-
+  jQuery(document)
+      .ready(
+          function() {
+            var idx = document.location.href.indexOf("/viewState/");
+            var url = document.location.href.substring(0, idx);
+            jQuery("#stateDetail tr.nodeDetail")
+                .each(
+                    function(index, value) {
+                      var nodeClassText = jQuery(this).find("td.nodeClass")
+                          .text();
+                      if (nodeClassText.indexOf('UIAliasHolder') >= 0) {
+                        var nodePath = jQuery(this).find("td.nodePath");
+                        var nodePathText = nodePath.text();
+                        nodePath
+                            .html("<a href='" + url + "/uiAliasHolder/${viewId}/${sequenceId}/" + nodePathText + "'  target='_blank' >"
+                                + nodePathText + "</a>");
+                      }
+                    });
+          });
 </script>
 
 </@block> </@extends>
