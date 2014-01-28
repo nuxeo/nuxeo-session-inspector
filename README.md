@@ -1,0 +1,2 @@
+nuxeo-session-inspector
+=======================
