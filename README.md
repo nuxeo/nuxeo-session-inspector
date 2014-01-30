@@ -17,7 +17,7 @@ The module appends a link in the top menu bar of Nuxeo JSF/UI to directly inspec
 
 ### Inspect UIAliasHolder
 
-Access point is /site/sessionInspector/jsfStateManager/localhost:8080/nuxeo/site/sessionInspector/jsfStateManager/uiAliasHolder/${viewId}/${sequenceId}/${path} where:
+Access point is /site/sessionInspector/jsfStateManager/uiAliasHolder/${viewId}/${sequenceId}/${path} where:
 
  - ${viewId} is the faces view (e.g view_documents,view_admin, etc.)
  - ${sequenceId} is the sequence id i.e. the state view id found in the hidden input of the rendered html page (e.g j_id1, j_id42, etc.)
