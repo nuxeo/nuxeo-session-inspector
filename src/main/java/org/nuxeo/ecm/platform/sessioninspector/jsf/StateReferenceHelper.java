@@ -35,7 +35,7 @@ public class StateReferenceHelper {
         return result;
     }
 
-    public Object getStateForPath(List<?> nodes, String[] path, Object[] states)
+    public static Object getStateForPath(List<?> nodes, String[] path, Object[] states)
             throws NoSuchFieldException, SecurityException,
             IllegalArgumentException, IllegalAccessException {
         for (int i = 0; i < nodes.size(); i++) {

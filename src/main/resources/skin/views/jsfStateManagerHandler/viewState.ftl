@@ -1,68 +1,63 @@
-<@extends src="base.ftl"> <@block name="header_scripts"> </@block>
+<@extends src="base.ftl"> <@block name="header_scripts">
 
-<@block name="body">
+<@block name="title">${viewId} State</@block>
+
+</@block> <@block name="body">
 
 <div>
   <h1>StateView</h1>
 
-  <table>
+  <table id="stateInfo" class="info">
     <tr>
       <td class="labelColumn">View</td>
       <td>${viewId}</td>
     </tr>
     <tr>
       <td class="labelColumn">Sequence Id</td>
-      <td style="white-space: pre-line">${sequenceId}</td>
+      <td>${sequenceId}</td>
     </tr>
     <tr>
-      <td class="labelColumn">Session Size (KB)</td>
-      <td style="white-space: pre-line">${dSessionSize}</td>
-    </tr>
-    <!-- <tr>
-      <td class="labelColumn">Fragment Size (HR)</td>
-      <td style="white-space: pre-line">${stateSizeHR}</td>
+      <td class="labelColumn">Session Size</td>
+      <td>${dSessionSize?c}</td>
     </tr>
     <tr>
-      <td class="labelColumn">Fragment Size</td>
-      <td style="white-space: pre-line">${stateSize}</td>
-    </tr>
-
-    <tr>
-      <td class="labelColumn">cumulatedDepth</td>
-      <td style="white-space: pre-line">${cumulatedDepth}</td>
-    </tr> -->
-    <tr>
-      <td class="labelColumn">maxDepth</td>
-      <td style="white-space: pre-line">${maxDepth}</td>
+      <td class="labelColumn">Cumulated Size</td>
+      <td>${cumulatedSize?c}</td>
     </tr>
     <tr>
-      <td class="labelColumn">nbBranch</td>
-      <td style="white-space: pre-line">${nbBranch}</td>
+      <td class="labelColumn">Max Depth</td>
+      <td>${maxDepth?c}</td>
+    </tr>
+    <tr>
+      <td>Nb Branch</td>
+      <td>${nbBranch?c}</td>
     </tr>
   </table>
 
   <h2>Paths</h2>
-  <table id="stateDetail">
-    <tr>
-     <th style="white-space: pre-line">depth</th>
-     <th style="white-space: pre-line">class</th>
-     <th style="white-space: pre-line">size (KB)</th>
-     <th style="white-space: pre-line" class="nodePath">path</th>
-    </tr>
-     <#list nodeList as node>
-    <tr class="nodeDetail">
-     <td style="white-space: pre-line">${node.depth}</td>
-     <td style="white-space: pre-line" class="nodeClass">${node.type}</td>
-     <td style="white-space: pre-line">${node.size}</td>
-     <td style="white-space: pre-line" class="nodePath">${node.path}</td>
+  <table id="stateDetail" class="tablesorter componentList">
+    <thead>
+      <tr>
+        <th class="depth">Depth</th>
+        <th>Class</th>
+        <th class="size">Size</th>
+        <th class="nodePath">Path</th>
       </tr>
-     </#list>
+    </thead>
+    <tbody>
+      <#list nodeList as node>
+      <tr class="nodeDetail">
+        <td class="depth">${node.depth}</td>
+        <td class="nodeClass">${node.type}</td>
+        <td class="size">${node.size?c}</td>
+        <td class="nodePath">${node.path}</td>
+      </tr>
+      </#list>
+    </tbody>
   </table>
 
 </div>
 
-<script src="http://code.jquery.com/jquery-latest.min.js"
-        type="text/javascript"></script>
 <script>
   jQuery(document)
       .ready(
@@ -82,6 +77,7 @@
                                 + nodePathText + "</a>");
                       }
                     });
+            jQuery(".tablesorter").tablesorter();
           });
 </script>
 

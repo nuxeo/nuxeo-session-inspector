@@ -1,0 +1,4 @@
+table th.size, table td.size, table th.depth, table td.depth {
+    text-align: right;
+    padding: 0px 20px !important;
+}

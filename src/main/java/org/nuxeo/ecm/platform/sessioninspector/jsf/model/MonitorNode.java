@@ -22,7 +22,6 @@ import java.util.List;
 import java.util.Map;
 
 import org.nuxeo.ecm.platform.sessioninspector.jsf.StateReferenceHelper;
-import org.nuxeo.ecm.platform.ui.web.binding.alias.UIAliasHolder;
 import org.nuxeo.runtime.javaagent.AgentLoader;
 
 /**
@@ -38,10 +37,6 @@ public class MonitorNode {
 
     private String id = null;
 
-    public String getId() {
-        return id;
-    }
-
     private List<MonitorNode> children = null;
 
     private Object stateReference = null;
@@ -53,12 +48,6 @@ public class MonitorNode {
     private final String type;
 
     private Map<String, ObjectStatistics> objMapStat;
-
-    public MonitorNode(Object rawHierarchy, Object[] rawState)
-            throws NoSuchFieldException, SecurityException,
-            IllegalArgumentException, IllegalAccessException {
-        this(null, rawHierarchy, rawState);
-    }
 
     public MonitorNode(MonitorNode parent, Object rawHierarchy,
             Object[] rawState) throws NoSuchFieldException, SecurityException,
@@ -83,19 +72,55 @@ public class MonitorNode {
 
     }
 
-    public String getType() {
-        return type;
+    public MonitorNode(Object rawHierarchy, Object[] rawState)
+            throws NoSuchFieldException, SecurityException,
+            IllegalArgumentException, IllegalAccessException {
+        this(null, rawHierarchy, rawState);
     }
 
-    public String getPath() {
-        if (path == null) {
-            if (parent == null) {
-                path = id;
-            } else {
-                path = parent.getPath() + ":" + id;
+    public MonitorNode getChild(String id) {
+        for (MonitorNode child : children) {
+            if (child.getId().equals(id)) {
+                return child;
             }
         }
-        return path;
+        return null;
+    }
+
+    public MonitorNode getChild(String[] path) {
+        if (path == null || path.length == 0 || !path[0].equals(id)) {
+            return null;
+        } else {
+            if (path.length == 1) {
+                return this;
+            } else {
+                MonitorNode result = null;
+                String[] subArray = Arrays.copyOfRange(path, 1, path.length);
+                for (MonitorNode n : children) {
+                    result = n.getChild(subArray);
+                    if (result != null) {
+                        break;
+                    }
+                }
+                return result;
+            }
+        }
+    }
+
+    public int getCumulatedDepth() {
+        int count = 1;
+        for (MonitorNode child : children) {
+            count += child.getCumulatedDepth();
+        }
+        return count;
+    }
+
+    public Long getCumulatedSize() {
+        Long count = getSize();
+        for (MonitorNode child : children) {
+            count += child.getCumulatedSize();
+        }
+        return count;
     }
 
     public int getDepth() {
@@ -109,13 +134,8 @@ public class MonitorNode {
         return depth;
     }
 
-    public List<MonitorNode> toList() {
-        List<MonitorNode> result = new ArrayList<MonitorNode>();
-        result.add(this);
-        for (MonitorNode child : children) {
-            result.addAll(child.toList());
-        }
-        return result;
+    public String getId() {
+        return id;
     }
 
     public int getMaxDepth() {
@@ -129,60 +149,45 @@ public class MonitorNode {
         return max;
     }
 
-    public int getCumulatedDepth() {
-        int count = 1;
-        for (MonitorNode child : children) {
-            count += child.getCumulatedDepth();
-        }
-        return count;
-    }
-
-    public Object getState(String[] path) {
-        if (path.length == 1 && path[0] == id) {
-            return stateReference;
-        } else {
-            return getChild(id).getState(
-                    Arrays.copyOfRange(path, 1, path.length));
-        }
-    }
-
-    public MonitorNode getChild(String id) {
-        for (MonitorNode child : children) {
-            if (child.getId().equals(id)) {
-                return child;
+    public String getPath() {
+        if (path == null) {
+            if (parent == null) {
+                path = id;
+            } else {
+                path = parent.getPath() + ":" + id;
             }
         }
-        return null;
+        return path;
     }
 
     public Long getSize() {
         if (size == null) {
             Long temp = AgentLoader.INSTANCE.getSizer().deepSizeOf(
-                    stateReference) / 1024 / 8;
+                    stateReference) / 8;
             size = temp;
         }
         return size;
-    }
-
-    public Long getCumulatedSize() {
-        Long count = getSize();
-        for (MonitorNode child : children) {
-            if (child.getId().equals(id)) {
-                count += child.getCumulatedSize();
-            }
-        }
-        return count;
     }
 
     public Object getStateReference() {
         return stateReference;
     }
 
+    public String getType() {
+        return type;
+    }
+
+    public List<MonitorNode> toList() {
+        List<MonitorNode> result = new ArrayList<MonitorNode>();
+        result.add(this);
+        for (MonitorNode child : children) {
+            result.addAll(child.toList());
+        }
+        return result;
+    }
+
     public String toString() {
         if (stateReference != null) {
-            if (stateReference instanceof UIAliasHolder) {
-                // TODO
-            }
             return stateReference.toString();
         }
         return null;

@@ -27,10 +27,10 @@ import javax.ws.rs.Produces;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.nuxeo.ecm.platform.sessioninspector.jsf.model.MonitorNode;
+import org.nuxeo.ecm.platform.sessioninspector.jsf.model.UIAliasHolderWrapper;
 import org.nuxeo.ecm.platform.ui.web.application.NuxeoConversationStateHolder;
 import org.nuxeo.ecm.webengine.model.WebObject;
 import org.nuxeo.ecm.webengine.model.impl.DefaultObject;
-import org.nuxeo.runtime.javaagent.AgentLoader;
 
 /**
  *
@@ -42,6 +42,8 @@ public class StateManagerHandler extends DefaultObject {
 
     private static final Log log = LogFactory.getLog(StateManagerHandler.class);
 
+    private final static String STATE_ORDER_CLASS = "org.nuxeo.ecm.platform.ui.web.application.NuxeoConversationStateHolder";
+
     @GET
     @Produces("text/html")
     @Path(value = "viewState/{viewId}/{sequenceId}")
@@ -50,32 +52,17 @@ public class StateManagerHandler extends DefaultObject {
     String sequenceId, @PathParam("computeSize")
     boolean computeSize) throws NoSuchFieldException, SecurityException,
             IllegalArgumentException, IllegalAccessException {
-        HttpSession s = ctx.getRequest().getSession();
-        NuxeoConversationStateHolder h = (NuxeoConversationStateHolder) s.getAttribute("org.nuxeo.ecm.platform.ui.web.application.NuxeoConversationStateHolder");
+        MonitorNode rootNode = getMonitorNode(viewId, sequenceId);
 
-        String root = null;
-        if (sequenceId != null) {
-            String[] split = sequenceId.split(":");
-            if (split != null && split.length > 0) {
-                root = split[0];
-            }
-        }
-        String computedViewId = "/" + viewId + ".xhtml";
-        Object[] o = h.getState(null, computedViewId, root);
-
-        long dSessionSize = 0;
-        long cumulatedSize = 0;
+        long dSessionSize = -1;
+        long cumulatedSize = -1;
         String sizeHR = "";
-        try {
-            dSessionSize = AgentLoader.INSTANCE.getSizer().deepSizeOf(
-                    s) / 1024 / 8;
-        } catch (Exception e) {
-            log.error("Could not compute size", e);
-            dSessionSize = -1;
-        }
+        /*
+         * try { dSessionSize = AgentLoader.INSTANCE.getSizer().deepSizeOf( s) /
+         * 1024 / 8; } catch (Exception e) { log.error("Could not compute size",
+         * e); dSessionSize = -1; }
+         */
 
-        MonitorNode rootNode = new MonitorNode(o[0],
-                (Object[]) ((Object[]) o[1])[0]);
         cumulatedSize = rootNode.getCumulatedSize();
 
         Integer maxDepth = rootNode.getMaxDepth();
@@ -86,8 +73,8 @@ public class StateManagerHandler extends DefaultObject {
         return getView("viewState").arg("cumulatedSize", cumulatedSize).arg(
                 "dSessionSize", dSessionSize).arg("nbBranch", nodeList.size()).arg(
                 "cumulatedDepth", cumulatedDepth).arg("maxDepth", maxDepth).arg(
-                "stateSizeHR", sizeHR).arg("viewId", viewId).arg("sequenceId",
-                sequenceId).arg("nodeList", nodeList);
+                "viewId", viewId).arg("sequenceId", sequenceId).arg("nodeList",
+                nodeList);
     }
 
     @GET
@@ -95,9 +82,34 @@ public class StateManagerHandler extends DefaultObject {
     @Path(value = "uiAliasHolder/{viewId}/{sequenceId}/{path}")
     public Object viewUIAliasHolder(@PathParam("viewId")
     String viewId, @PathParam("sequenceId")
-    String sequenceId, @PathParam("path") String path) {
+    String sequenceId, @PathParam("path")
+    String path) throws NoSuchFieldException, SecurityException,
+            IllegalArgumentException, IllegalAccessException {
+        MonitorNode rootNode = getMonitorNode(viewId, sequenceId);
 
-        return getView("uiAliasHolder");
+        UIAliasHolderWrapper uiAliasHolderWrapper = new UIAliasHolderWrapper(
+                (Object[]) rootNode.getChild(path.split(":")).getStateReference());
+
+        return getView("uiAliasHolder").arg("aliasId",
+                uiAliasHolderWrapper.getId()).arg("path",
+                        path).arg("mapperSize",
+                uiAliasHolderWrapper.getAliasVariableMapperSize()).arg(
+                "variables", uiAliasHolderWrapper.getVariables().entrySet());
+    }
+
+    private MonitorNode getMonitorNode(String viewId, String sequenceId)
+            throws NoSuchFieldException, SecurityException,
+            IllegalArgumentException, IllegalAccessException {
+        NuxeoConversationStateHolder h = getStateHolder();
+        String computedViewId = "/" + viewId + ".xhtml";
+        Object[] o = h.getState(null, computedViewId, sequenceId);
+        return new MonitorNode(o[0], (Object[]) ((Object[]) o[1])[0]);
+    }
+
+    private NuxeoConversationStateHolder getStateHolder() {
+        HttpSession s = ctx.getRequest().getSession();
+        NuxeoConversationStateHolder h = (NuxeoConversationStateHolder) s.getAttribute(STATE_ORDER_CLASS);
+        return h;
     }
 
 }
