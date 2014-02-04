@@ -1,8 +1,10 @@
-<@extends src="base.ftl"> <@block name="header_scripts">
+<@extends src="base.ftl">
 
-<@block name="title">${viewId} State</@block>
+<@block name="header_scripts">
+  <@block name="title">${viewId} State</@block>
+</@block>
 
-</@block> <@block name="body">
+<@block name="body">
 
 <div>
   <h1>StateView</h1>

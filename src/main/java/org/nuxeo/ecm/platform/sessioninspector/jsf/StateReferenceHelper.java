@@ -21,8 +21,6 @@ import java.util.Arrays;
 import java.util.List;
 
 /**
- *
- *
  * @since 5.9.2
  */
 public class StateReferenceHelper {
@@ -35,8 +33,8 @@ public class StateReferenceHelper {
         return result;
     }
 
-    public static Object getStateForPath(List<?> nodes, String[] path, Object[] states)
-            throws NoSuchFieldException, SecurityException,
+    public static Object getStateForPath(List<?> nodes, String[] path,
+            Object[] states) throws NoSuchFieldException, SecurityException,
             IllegalArgumentException, IllegalAccessException {
         for (int i = 0; i < nodes.size(); i++) {
             if (getIdForNode(nodes.get(i)).equals(path[0])) {

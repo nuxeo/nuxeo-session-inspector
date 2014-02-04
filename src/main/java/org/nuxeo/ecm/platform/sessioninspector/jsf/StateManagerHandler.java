@@ -31,10 +31,9 @@ import org.nuxeo.ecm.platform.sessioninspector.jsf.model.UIAliasHolderWrapper;
 import org.nuxeo.ecm.platform.ui.web.application.NuxeoConversationStateHolder;
 import org.nuxeo.ecm.webengine.model.WebObject;
 import org.nuxeo.ecm.webengine.model.impl.DefaultObject;
+import org.nuxeo.runtime.javaagent.AgentLoader;
 
 /**
- *
- *
  * @since 5.9.2
  */
 @WebObject(type = "jsfStateManagerHandler")
@@ -47,6 +46,7 @@ public class StateManagerHandler extends DefaultObject {
     @GET
     @Produces("text/html")
     @Path(value = "viewState/{viewId}/{sequenceId}")
+    @SuppressWarnings("boxing")
     public Object viewState(@PathParam("viewId")
     String viewId, @PathParam("sequenceId")
     String sequenceId, @PathParam("computeSize")
@@ -56,12 +56,17 @@ public class StateManagerHandler extends DefaultObject {
 
         long dSessionSize = -1;
         long cumulatedSize = -1;
-        String sizeHR = "";
-        /*
-         * try { dSessionSize = AgentLoader.INSTANCE.getSizer().deepSizeOf( s) /
-         * 1024 / 8; } catch (Exception e) { log.error("Could not compute size",
-         * e); dSessionSize = -1; }
-         */
+
+        if (false) {
+            // disabled, too heavy to compute for now
+            try {
+                dSessionSize = AgentLoader.INSTANCE.getSizer().deepSizeOf(
+                        getStateHolder()) / 1024 / 8;
+            } catch (Exception e) {
+                log.error("Could not compute size", e);
+                dSessionSize = -1;
+            }
+        }
 
         cumulatedSize = rootNode.getCumulatedSize();
 
@@ -91,9 +96,8 @@ public class StateManagerHandler extends DefaultObject {
                 (Object[]) rootNode.getChild(path.split(":")).getStateReference());
 
         return getView("uiAliasHolder").arg("aliasId",
-                uiAliasHolderWrapper.getId()).arg("path",
-                        path).arg("mapperSize",
-                uiAliasHolderWrapper.getAliasVariableMapperSize()).arg(
+                uiAliasHolderWrapper.getId()).arg("path", path).arg(
+                "mapperSize", uiAliasHolderWrapper.getAliasVariableMapperSize()).arg(
                 "variables", uiAliasHolderWrapper.getVariables().entrySet());
     }
 

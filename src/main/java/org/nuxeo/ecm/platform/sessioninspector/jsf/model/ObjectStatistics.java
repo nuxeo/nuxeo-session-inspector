@@ -17,7 +17,8 @@
 package org.nuxeo.ecm.platform.sessioninspector.jsf.model;
 
 /**
- *
+ * Might be useful to check for references stats (in case same object is
+ * referenced in several items state).
  *
  * @since 5.9.2
  */
@@ -28,9 +29,5 @@ public class ObjectStatistics {
     private String nbObject;
 
     private long cumulatedSize;
-
-
-
-
 
 }

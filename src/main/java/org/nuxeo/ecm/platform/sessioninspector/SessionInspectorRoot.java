@@ -1,4 +1,5 @@
 package org.nuxeo.ecm.platform.sessioninspector;
+
 /*
  * (C) Copyright 2014 Nuxeo SA (http://nuxeo.com/) and contributors.
  *
@@ -16,7 +17,6 @@ package org.nuxeo.ecm.platform.sessioninspector;
  *     <a href="mailto:grenard@nuxeo.com">Guillaume</a>
  */
 
-
 import javax.ws.rs.Path;
 
 import org.nuxeo.ecm.webengine.model.Resource;
@@ -24,13 +24,11 @@ import org.nuxeo.ecm.webengine.model.WebObject;
 import org.nuxeo.ecm.webengine.model.impl.ModuleRoot;
 
 /**
- *
- *
  * @since 5.9.2
  */
 @Path("/sessionInspector")
 @WebObject(type = "sessionInspector")
-public class SessionInspectorRoot extends ModuleRoot  {
+public class SessionInspectorRoot extends ModuleRoot {
 
     @Path(value = "jsfStateManager")
     public Resource download() {

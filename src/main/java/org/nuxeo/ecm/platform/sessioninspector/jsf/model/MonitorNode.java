@@ -25,29 +25,27 @@ import org.nuxeo.ecm.platform.sessioninspector.jsf.StateReferenceHelper;
 import org.nuxeo.runtime.javaagent.AgentLoader;
 
 /**
- *
- *
  * @since 5.9.2
  */
 public class MonitorNode {
 
-    private MonitorNode parent = null;
+    protected MonitorNode parent = null;
 
-    private String path = null;
+    protected String id = null;
 
-    private String id = null;
+    protected Object stateReference = null;
 
-    private List<MonitorNode> children = null;
+    protected final String type;
 
-    private Object stateReference = null;
+    protected List<MonitorNode> children = null;
 
-    private Integer depth = null;
+    protected String path = null;
 
-    private Long size = null;
+    protected Integer depth = null;
 
-    private final String type;
+    protected Long size = null;
 
-    private Map<String, ObjectStatistics> objMapStat;
+    protected Map<String, ObjectStatistics> objMapStat;
 
     public MonitorNode(MonitorNode parent, Object rawHierarchy,
             Object[] rawState) throws NoSuchFieldException, SecurityException,
@@ -115,6 +113,7 @@ public class MonitorNode {
         return count;
     }
 
+    @SuppressWarnings("boxing")
     public Long getCumulatedSize() {
         Long count = getSize();
         for (MonitorNode child : children) {
@@ -123,6 +122,7 @@ public class MonitorNode {
         return count;
     }
 
+    @SuppressWarnings("boxing")
     public int getDepth() {
         if (depth == null) {
             if (parent == null) {
@@ -160,6 +160,7 @@ public class MonitorNode {
         return path;
     }
 
+    @SuppressWarnings("boxing")
     public Long getSize() {
         if (size == null) {
             Long temp = AgentLoader.INSTANCE.getSizer().deepSizeOf(
