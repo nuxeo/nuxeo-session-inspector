@@ -37,6 +37,11 @@
        <groupId>org.jboss.el</groupId>
        <artifactId>jboss-el</artifactId>
     </dependency>
+    <dependency>
+       <groupId>javax.servlet</groupId>
+       <artifactId>javax.servlet-api</artifactId>
+    </dependency>
+
 
   </dependencies>
 </project>
