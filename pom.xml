@@ -29,17 +29,17 @@
       <artifactId>nuxeo-javaagent-bridge</artifactId>
       <version>5.9.2-SNAPSHOT</version>
     </dependency>
-        <dependency>
+    <dependency>
       <groupId>org.richfaces.framework</groupId>
       <artifactId>richfaces-impl</artifactId>
     </dependency>
     <dependency>
-       <groupId>org.jboss.el</groupId>
-       <artifactId>jboss-el</artifactId>
+      <groupId>org.jboss.el</groupId>
+      <artifactId>jboss-el</artifactId>
     </dependency>
     <dependency>
-       <groupId>javax.servlet</groupId>
-       <artifactId>javax.servlet-api</artifactId>
+      <groupId>javax.servlet</groupId>
+      <artifactId>javax.servlet-api</artifactId>
     </dependency>
 
 
