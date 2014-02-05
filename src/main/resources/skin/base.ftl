@@ -7,8 +7,8 @@
 
     <link rel="stylesheet" href="${skinPath}/css/session-inspector.css"
       type="text/css" media="screen" charset="utf-8" />
-    <link rel="stylesheet" href="${skinPath}/css/style.css" type="text/css"
-      media="screen" charset="utf-8" />
+    <link rel="stylesheet" href="${skinPath}/css/style.css"
+      type="text/css" media="screen" charset="utf-8" />
     <@block name="stylesheets" />
 
     <script type="text/javascript"

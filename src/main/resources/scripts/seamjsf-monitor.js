@@ -4,9 +4,9 @@ jQuery(document).ready(
           document.URL.indexOf("?"));
       var sequenceId = jQuery(
           "form>input[type='hidden'][name='javax.faces.ViewState']").val();
-      jQuery("div.menu").after(
+      jQuery("div.menu").first().after(
           "<a href='site/sessionInspector/jsfStateManager/viewState/" + viewId
               + "/" + sequenceId
-              + "' style='background-color:#00FF00;' target='_blank' >Inspect"
-              + sequenceId + "</a>");
+              + "' style='background-color:#00FF00;' target='_blank'>"
+              + "Inspect '" + sequenceId + "'</a>");
     });

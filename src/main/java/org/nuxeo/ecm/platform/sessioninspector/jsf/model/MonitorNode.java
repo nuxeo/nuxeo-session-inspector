@@ -178,6 +178,13 @@ public class MonitorNode {
         return type;
     }
 
+    public String getView() {
+        if (type != null && type.endsWith("UIAliasHolder")) {
+            return "uiAliasHolder";
+        }
+        return "uiComponent";
+    }
+
     public List<MonitorNode> toList() {
         List<MonitorNode> result = new ArrayList<MonitorNode>();
         result.add(this);

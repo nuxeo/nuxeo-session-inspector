@@ -1,8 +1,6 @@
 <@extends src="base.ftl">
 
-<@block name="header_scripts">
-  <@block name="title">${viewId} State</@block>
-</@block>
+<@block name="title">${viewId} State</@block>
 
 <@block name="body">
 
@@ -31,7 +29,7 @@
       <td>${maxDepth?c}</td>
     </tr>
     <tr>
-      <td>Nb Branch</td>
+      <td class="labelColumn">Nb Branch</td>
       <td>${nbBranch?c}</td>
     </tr>
   </table>
@@ -40,6 +38,7 @@
   <table id="stateDetail" class="tablesorter componentList">
     <thead>
       <tr>
+        <th class="index">Index</th>
         <th class="depth">Depth</th>
         <th>Class</th>
         <th class="size">Size</th>
@@ -49,10 +48,16 @@
     <tbody>
       <#list nodeList as node>
       <tr class="nodeDetail">
+        <td class="index">${node_index?c}</td>
         <td class="depth">${node.depth}</td>
         <td class="nodeClass">${node.type}</td>
         <td class="size">${node.size?c}</td>
-        <td class="nodePath">${node.path}</td>
+        <td class="nodePath">
+          <a href="${Context.getBaseURL()}${This.path}/${node.view}/${viewId}/${sequenceId}/${node.path}"
+            target="_blank">
+            ${node.path}
+          </a>
+        </td>
       </tr>
       </#list>
     </tbody>
@@ -61,26 +66,11 @@
 </div>
 
 <script>
-  jQuery(document)
-      .ready(
-          function() {
-            var idx = document.location.href.indexOf("/viewState/");
-            var url = document.location.href.substring(0, idx);
-            jQuery("#stateDetail tr.nodeDetail")
-                .each(
-                    function(index, value) {
-                      var nodeClassText = jQuery(this).find("td.nodeClass")
-                          .text();
-                      if (nodeClassText.indexOf('UIAliasHolder') >= 0) {
-                        var nodePath = jQuery(this).find("td.nodePath");
-                        var nodePathText = nodePath.text();
-                        nodePath
-                            .html("<a href='" + url + "/uiAliasHolder/${viewId}/${sequenceId}/" + nodePathText + "'  target='_blank' >"
-                                + nodePathText + "</a>");
-                      }
-                    });
-            jQuery(".tablesorter").tablesorter();
-          });
+  jQuery(document).ready(function() {
+      jQuery(".tablesorter").tablesorter();
+  });
 </script>
 
-</@block> </@extends>
+</@block>
+
+</@extends>

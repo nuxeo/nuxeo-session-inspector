@@ -16,7 +16,9 @@
  */
 package org.nuxeo.ecm.platform.sessioninspector.jsf;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import javax.servlet.http.HttpSession;
 import javax.ws.rs.GET;
@@ -28,6 +30,7 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.nuxeo.ecm.platform.sessioninspector.jsf.model.MonitorNode;
 import org.nuxeo.ecm.platform.sessioninspector.jsf.model.UIAliasHolderWrapper;
+import org.nuxeo.ecm.platform.sessioninspector.jsf.model.UIComponentWrapper;
 import org.nuxeo.ecm.platform.ui.web.application.NuxeoConversationStateHolder;
 import org.nuxeo.ecm.webengine.model.WebObject;
 import org.nuxeo.ecm.webengine.model.impl.DefaultObject;
@@ -68,18 +71,49 @@ public class StateManagerHandler extends DefaultObject {
             }
         }
 
-        cumulatedSize = rootNode.getCumulatedSize();
-
-        Integer maxDepth = rootNode.getMaxDepth();
-        Integer cumulatedDepth = rootNode.getCumulatedDepth();
+        Map<String, Object> args = new HashMap<String, Object>();
+        args.put("viewId", viewId);
+        args.put("sequenceId", sequenceId);
+        args.put("dSessionSize", dSessionSize);
+        args.put("cumulatedSize", rootNode.getCumulatedSize());
+        args.put("cumulatedDepth", rootNode.getCumulatedDepth());
+        args.put("maxDepth", rootNode.getMaxDepth());
 
         List<MonitorNode> nodeList = rootNode.toList();
+        args.put("nodeList", nodeList);
+        args.put("nbBranch", nodeList.size());
+        return getView("viewState").args(args);
 
-        return getView("viewState").arg("cumulatedSize", cumulatedSize).arg(
-                "dSessionSize", dSessionSize).arg("nbBranch", nodeList.size()).arg(
-                "cumulatedDepth", cumulatedDepth).arg("maxDepth", maxDepth).arg(
-                "viewId", viewId).arg("sequenceId", sequenceId).arg("nodeList",
-                nodeList);
+    }
+
+    @GET
+    @Produces("text/html")
+    @Path(value = "uiComponent/{viewId}/{sequenceId}/{path}")
+    public Object viewUIComponent(@PathParam("viewId")
+    String viewId, @PathParam("sequenceId")
+    String sequenceId, @PathParam("path")
+    String path) throws NoSuchFieldException, SecurityException,
+            IllegalArgumentException, IllegalAccessException {
+        MonitorNode rootNode = getMonitorNode(viewId, sequenceId);
+        MonitorNode childNode = rootNode.getChild(path.split(":"));
+        UIComponentWrapper comp = new UIComponentWrapper(childNode.getId(),
+                (Object[]) childNode.getStateReference());
+
+        Map<String, Object> args = getArguments(childNode, comp, path);
+        return getView("uiComponent").args(args);
+    }
+
+    @SuppressWarnings("boxing")
+    protected Map<String, Object> getArguments(MonitorNode node,
+            UIComponentWrapper comp, String path) {
+        Map<String, Object> args = new HashMap<String, Object>();
+        args.put("id", comp.getId());
+        args.put("path", path);
+        args.put("type", node.getType());
+        args.put("children", comp.getFlatState());
+        args.put("depth", node.getDepth());
+        args.put("size", node.getSize());
+        return args;
     }
 
     @GET
@@ -91,14 +125,15 @@ public class StateManagerHandler extends DefaultObject {
     String path) throws NoSuchFieldException, SecurityException,
             IllegalArgumentException, IllegalAccessException {
         MonitorNode rootNode = getMonitorNode(viewId, sequenceId);
+        MonitorNode childNode = rootNode.getChild(path.split(":"));
+        UIAliasHolderWrapper alias = new UIAliasHolderWrapper(
+                childNode.getId(), (Object[]) childNode.getStateReference());
 
-        UIAliasHolderWrapper uiAliasHolderWrapper = new UIAliasHolderWrapper(
-                (Object[]) rootNode.getChild(path.split(":")).getStateReference());
-
-        return getView("uiAliasHolder").arg("aliasId",
-                uiAliasHolderWrapper.getId()).arg("path", path).arg(
-                "mapperSize", uiAliasHolderWrapper.getAliasVariableMapperSize()).arg(
-                "variables", uiAliasHolderWrapper.getVariables().entrySet());
+        Map<String, Object> args = getArguments(childNode, alias, path);
+        args.put("aliasId", alias.getAliasId());
+        args.put("mapperSize", alias.getAliasVariableMapperSize());
+        args.put("variables", alias.getVariables().entrySet());
+        return getView("uiAliasHolder").args(args);
     }
 
     private MonitorNode getMonitorNode(String viewId, String sequenceId)

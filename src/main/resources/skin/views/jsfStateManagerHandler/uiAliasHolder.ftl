@@ -1,20 +1,15 @@
-<@extends src="base.ftl"> <@block name="header_scripts"> </@block>
+<@extends src="views/jsfStateManagerHandler/uiComponent.ftl">
 
 <@block name="title">UIALiasHolder ${aliasId}</@block>
 
-<@block name="body">
+<@block name="h1">UIALiasHolder</@block>
 
-<div>
-  <h1>UIAliasHolder</h1>
+<@block name="compHeader">
 
-  <table>
+  <table class="info">
     <tr>
       <td class="labelColumn">Alias Id</td>
       <td>${aliasId}</td>
-    </tr>
-    <tr>
-      <td class="labelColumn">Path</td>
-      <td>${path}</td>
     </tr>
     <tr>
       <td class="labelColumn">Mapper Size</td>
@@ -22,7 +17,8 @@
     </tr>
   </table>
 
-  <h2>Infos</h2>
+  <h2>Variables</h2>
+
   <table id="aliasDetail" class="tablesorter componentList">
     <thead>
       <tr>
@@ -40,14 +36,6 @@
     </tbody>
   </table>
 
-</div>
+</@block>
 
-<script>
-  jQuery(document)
-      .ready(
-          function() {
-            jQuery(".tablesorter").tablesorter();
-          });
-</script>
-
-</@block> </@extends>
+</@extends>

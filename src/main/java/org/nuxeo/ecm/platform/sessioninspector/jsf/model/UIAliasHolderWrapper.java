@@ -24,35 +24,27 @@ import org.nuxeo.ecm.platform.ui.web.binding.alias.AliasVariableMapper;
 import org.nuxeo.runtime.javaagent.AgentLoader;
 
 /**
- *
- *
  * @since 5.9.2
  */
-public class UIAliasHolderWrapper {
+public class UIAliasHolderWrapper extends UIComponentWrapper {
 
-    private final String id;
+    protected final AliasVariableMapper mapper;
 
-    private final AliasVariableMapper mapper;
-
-    private final Object[] object;
-
-    public UIAliasHolderWrapper(Object[] object) {
-        assert (object != null && object.length == 2);
-        this.object = object;
+    public UIAliasHolderWrapper(String id, Object[] object) {
+        super(id, object);
         mapper = (AliasVariableMapper) object[2];
-        id = (String) ((Object[]) object[0])[3];
     }
 
+    @SuppressWarnings("boxing")
     public Long getAliasVariableMapperSize() {
         return AgentLoader.INSTANCE.getSizer().deepSizeOf(mapper.getVariables()) / 8;
     }
 
-    public String getId() {
-        return id;
-    }
-
-    public Object[] getObject() {
-        return object;
+    public String getAliasId() {
+        if (mapper != null) {
+            return mapper.getId();
+        }
+        return null;
     }
 
     public Map<String, ValueExpression> getVariables() {
