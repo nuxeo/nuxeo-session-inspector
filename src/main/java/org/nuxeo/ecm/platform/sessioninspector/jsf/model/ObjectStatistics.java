@@ -26,8 +26,53 @@ public class ObjectStatistics {
 
     private String type;
 
-    private String nbObject;
+    private long nbInstance;
 
     private long cumulatedSize;
+
+    /**
+     * @param type
+     * @param nbObject
+     * @param cumulatedSize
+     */
+    public ObjectStatistics(String type, long nbInstance, long cumulatedSize) {
+        super();
+        this.type = type;
+        this.nbInstance = nbInstance;
+        this.cumulatedSize = cumulatedSize;
+    }
+
+    /**
+     * @param type
+     * @param nbObject
+     * @param cumulatedSize
+     */
+    public ObjectStatistics(String type) {
+        this(type, 1, 0);
+    }
+
+    public String getType() {
+        return type;
+    }
+
+    public void setType(String type) {
+        this.type = type;
+    }
+
+    public long getNbInstance() {
+        return nbInstance;
+    }
+
+    public void setNbInstance(long nbInstance) {
+        this.nbInstance = nbInstance;
+    }
+
+    public long getCumulatedSize() {
+        return cumulatedSize;
+    }
+
+    public void setCumulatedSize(long cumulatedSize) {
+        this.cumulatedSize = cumulatedSize;
+    }
 
 }

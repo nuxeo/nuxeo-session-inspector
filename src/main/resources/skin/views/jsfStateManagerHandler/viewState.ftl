@@ -34,6 +34,8 @@
     </tr>
   </table>
 
+  <a href="${Context.getBaseURL()}${This.path}/viewObjects/${viewId}/${sequenceId}">View objects</a>
+
   <h2>Paths</h2>
   <table id="stateDetail" class="tablesorter componentList">
     <thead>

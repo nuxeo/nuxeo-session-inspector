@@ -31,6 +31,7 @@ import org.apache.commons.logging.LogFactory;
 import org.nuxeo.ecm.platform.sessioninspector.jsf.model.MonitorNode;
 import org.nuxeo.ecm.platform.sessioninspector.jsf.model.UIAliasHolderWrapper;
 import org.nuxeo.ecm.platform.sessioninspector.jsf.model.UIComponentWrapper;
+import org.nuxeo.ecm.platform.sessioninspector.util.ObjectVisitor;
 import org.nuxeo.ecm.platform.ui.web.application.NuxeoConversationStateHolder;
 import org.nuxeo.ecm.webengine.model.WebObject;
 import org.nuxeo.ecm.webengine.model.impl.DefaultObject;
@@ -88,6 +89,26 @@ public class StateManagerHandler extends DefaultObject {
 
     @GET
     @Produces("text/html")
+    @Path(value = "viewObjects/{viewId}/{sequenceId}")
+    @SuppressWarnings("boxing")
+    public Object viewStats(@PathParam("viewId")
+    String viewId, @PathParam("sequenceId")
+    String sequenceId, @PathParam("computeSize")
+    boolean computeSize) throws NoSuchFieldException, SecurityException,
+            IllegalArgumentException, IllegalAccessException {
+        ObjectVisitor v = new ObjectVisitor();
+        v.visit(getState(viewId, sequenceId));
+
+        Map<String, Object> args = new HashMap<String, Object>();
+        args.put("viewId", viewId);
+        args.put("sequenceId", sequenceId);
+        args.put("objectList", v.getObjectStatisticsList());
+        return getView("viewObjects").args(args);
+
+    }
+
+    @GET
+    @Produces("text/html")
     @Path(value = "uiComponent/{viewId}/{sequenceId}/{path}")
     public Object viewUIComponent(@PathParam("viewId")
     String viewId, @PathParam("sequenceId")
@@ -139,10 +160,14 @@ public class StateManagerHandler extends DefaultObject {
     private MonitorNode getMonitorNode(String viewId, String sequenceId)
             throws NoSuchFieldException, SecurityException,
             IllegalArgumentException, IllegalAccessException {
+        Object[] o = getState(viewId, sequenceId);
+        return new MonitorNode(o[0], (Object[]) ((Object[]) o[1])[0]);
+    }
+
+    private Object[] getState(String viewId, String sequenceId) {
         NuxeoConversationStateHolder h = getStateHolder();
         String computedViewId = "/" + viewId + ".xhtml";
-        Object[] o = h.getState(null, computedViewId, sequenceId);
-        return new MonitorNode(o[0], (Object[]) ((Object[]) o[1])[0]);
+        return h.getState(null, computedViewId, sequenceId);
     }
 
     private NuxeoConversationStateHolder getStateHolder() {
