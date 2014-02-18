@@ -7,6 +7,7 @@
     <version>5.9.3-SNAPSHOT</version>
   </parent>
 
+  <groupId>org.nuxeo.runtime</groupId>
   <artifactId>nuxeo-session-inspector</artifactId>
   <name>nuxeo-platform-session-inspector</name>
 
@@ -26,7 +27,6 @@
     <dependency>
       <groupId>org.nuxeo.runtime</groupId>
       <artifactId>nuxeo-javaagent-bridge</artifactId>
-      <version>5.9.2-SNAPSHOT</version>
     </dependency>
     <dependency>
       <groupId>org.richfaces.framework</groupId>
@@ -40,7 +40,12 @@
       <groupId>javax.servlet</groupId>
       <artifactId>javax.servlet-api</artifactId>
     </dependency>
-
-
   </dependencies>
+
+  <scm>
+    <connection>scm:git:git://github.com/nuxeo/nuxeo-session-inspector.git</connection>
+    <developerConnection>scm:git:ssh://git@github.com:nuxeo/nuxeo-session-inspector.git</developerConnection>
+    <url>https://github.com/nuxeo/nuxeo-session-inspector</url>
+  </scm>
+
 </project>

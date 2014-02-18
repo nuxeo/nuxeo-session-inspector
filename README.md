@@ -7,7 +7,7 @@ This module allows to browse the http session java object through webengine api.
 
 1. Install <https://github.com/nuxeo/nuxeo-javaagent>
 2. Run mvn clean install.
-3. Copy nuxeo-session-monitor-{version}.jar to $NUXEO_HOME/nxserver/bundles
+3. Copy nuxeo-session-inspector-{version}.jar to $NUXEO_HOME/nxserver/bundles
 
 ## Current Features
 
