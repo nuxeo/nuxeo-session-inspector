@@ -29,8 +29,8 @@
       <artifactId>nuxeo-javaagent-bridge</artifactId>
     </dependency>
     <dependency>
-      <groupId>org.richfaces.framework</groupId>
-      <artifactId>richfaces-impl</artifactId>
+      <groupId>org.richfaces.ui</groupId>
+      <artifactId>richfaces-components-ui</artifactId>
     </dependency>
     <dependency>
       <groupId>org.jboss.el</groupId>
