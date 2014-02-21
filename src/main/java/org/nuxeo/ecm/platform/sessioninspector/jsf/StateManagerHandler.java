@@ -20,7 +20,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import javax.servlet.http.HttpSession;
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
@@ -32,10 +31,8 @@ import org.nuxeo.ecm.platform.sessioninspector.jsf.model.MonitorNode;
 import org.nuxeo.ecm.platform.sessioninspector.jsf.model.UIAliasHolderWrapper;
 import org.nuxeo.ecm.platform.sessioninspector.jsf.model.UIComponentWrapper;
 import org.nuxeo.ecm.platform.sessioninspector.util.ObjectVisitor;
-import org.nuxeo.ecm.platform.ui.web.application.NuxeoConversationStateHolder;
 import org.nuxeo.ecm.webengine.model.WebObject;
 import org.nuxeo.ecm.webengine.model.impl.DefaultObject;
-import org.nuxeo.runtime.javaagent.AgentLoader;
 
 /**
  * @since 5.9.2
@@ -63,13 +60,13 @@ public class StateManagerHandler extends DefaultObject {
 
         if (false) {
             // disabled, too heavy to compute for now
-            try {
-                dSessionSize = AgentLoader.INSTANCE.getSizer().deepSizeOf(
-                        getStateHolder()) / 1024 / 8;
-            } catch (Exception e) {
-                log.error("Could not compute size", e);
-                dSessionSize = -1;
-            }
+            // try {
+            // dSessionSize = AgentLoader.INSTANCE.getSizer().deepSizeOf(
+            // getStateHolder()) / 1024 / 8;
+            // } catch (Exception e) {
+            // log.error("Could not compute size", e);
+            // dSessionSize = -1;
+            // }
         }
 
         Map<String, Object> args = new HashMap<String, Object>();
@@ -164,16 +161,20 @@ public class StateManagerHandler extends DefaultObject {
         return new MonitorNode(o[0], (Object[]) ((Object[]) o[1])[0]);
     }
 
+    // FIXME: NuxeoConversationStateHolder has been disabled for JSF2 migration
+
     private Object[] getState(String viewId, String sequenceId) {
-        NuxeoConversationStateHolder h = getStateHolder();
-        String computedViewId = "/" + viewId + ".xhtml";
-        return h.getState(null, computedViewId, sequenceId);
+        return null;
+        // NuxeoConversationStateHolder h = getStateHolder();
+        // String computedViewId = "/" + viewId + ".xhtml";
+        // return h.getState(null, computedViewId, sequenceId);
     }
 
-    private NuxeoConversationStateHolder getStateHolder() {
-        HttpSession s = ctx.getRequest().getSession();
-        NuxeoConversationStateHolder h = (NuxeoConversationStateHolder) s.getAttribute(STATE_ORDER_CLASS);
-        return h;
-    }
+    // private NuxeoConversationStateHolder getStateHolder() {
+    // HttpSession s = ctx.getRequest().getSession();
+    // NuxeoConversationStateHolder h = (NuxeoConversationStateHolder)
+    // s.getAttribute(STATE_ORDER_CLASS);
+    // return h;
+    // }
 
 }
