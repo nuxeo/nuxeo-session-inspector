@@ -47,9 +47,8 @@ public class MonitorNode {
 
     protected Map<String, ObjectStatistics> objMapStat;
 
-    public MonitorNode(MonitorNode parent, Object rawHierarchy,
-            Object[] rawState) throws NoSuchFieldException, SecurityException,
-            IllegalArgumentException, IllegalAccessException {
+    public MonitorNode(MonitorNode parent, Object rawHierarchy, Object[] rawState) throws NoSuchFieldException,
+            SecurityException, IllegalArgumentException, IllegalAccessException {
         super();
         this.parent = parent;
         this.id = StateReferenceHelper.getIdForNode(rawHierarchy);
@@ -63,15 +62,13 @@ public class MonitorNode {
         } else {
             children = new ArrayList<MonitorNode>(childrenOfCurrent.size());
             for (int i = 0; i < childrenOfCurrent.size(); i++) {
-                children.add(new MonitorNode(this, childrenOfCurrent.get(i),
-                        (Object[]) ((Object[]) rawState[1])[i]));
+                children.add(new MonitorNode(this, childrenOfCurrent.get(i), (Object[]) ((Object[]) rawState[1])[i]));
             }
         }
 
     }
 
-    public MonitorNode(Object rawHierarchy, Object[] rawState)
-            throws NoSuchFieldException, SecurityException,
+    public MonitorNode(Object rawHierarchy, Object[] rawState) throws NoSuchFieldException, SecurityException,
             IllegalArgumentException, IllegalAccessException {
         this(null, rawHierarchy, rawState);
     }
@@ -163,8 +160,7 @@ public class MonitorNode {
     @SuppressWarnings("boxing")
     public Long getSize() {
         if (size == null) {
-            Long temp = AgentLoader.INSTANCE.getSizer().deepSizeOf(
-                    stateReference) / 8;
+            Long temp = AgentLoader.INSTANCE.getSizer().deepSizeOf(stateReference) / 8;
             size = temp;
         }
         return size;

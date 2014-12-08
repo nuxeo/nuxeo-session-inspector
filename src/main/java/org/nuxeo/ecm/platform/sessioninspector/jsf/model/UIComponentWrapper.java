@@ -52,8 +52,7 @@ public class UIComponentWrapper {
                     res.addAll(new UIComponentWrapper(id, (Object[]) item).getFlatState());
                 } else if (item instanceof AliasVariableMapper) {
                     AliasVariableMapper vm = (AliasVariableMapper) item;
-                    res.add(String.format("AliasVariableMapper(%s, %s)",
-                            vm.getId(), vm.getVariables()));
+                    res.add(String.format("AliasVariableMapper(%s, %s)", vm.getId(), vm.getVariables()));
                 } else {
                     res.add(item.toString());
                 }

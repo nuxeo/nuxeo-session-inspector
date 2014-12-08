@@ -48,10 +48,8 @@ public class StateManagerHandler extends DefaultObject {
     @Produces("text/html")
     @Path(value = "viewState/{viewId}/{sequenceId}")
     @SuppressWarnings("boxing")
-    public Object viewState(@PathParam("viewId")
-    String viewId, @PathParam("sequenceId")
-    String sequenceId, @PathParam("computeSize")
-    boolean computeSize) throws NoSuchFieldException, SecurityException,
+    public Object viewState(@PathParam("viewId") String viewId, @PathParam("sequenceId") String sequenceId,
+            @PathParam("computeSize") boolean computeSize) throws NoSuchFieldException, SecurityException,
             IllegalArgumentException, IllegalAccessException {
         MonitorNode rootNode = getMonitorNode(viewId, sequenceId);
 
@@ -88,10 +86,8 @@ public class StateManagerHandler extends DefaultObject {
     @Produces("text/html")
     @Path(value = "viewObjects/{viewId}/{sequenceId}")
     @SuppressWarnings("boxing")
-    public Object viewStats(@PathParam("viewId")
-    String viewId, @PathParam("sequenceId")
-    String sequenceId, @PathParam("computeSize")
-    boolean computeSize) throws NoSuchFieldException, SecurityException,
+    public Object viewStats(@PathParam("viewId") String viewId, @PathParam("sequenceId") String sequenceId,
+            @PathParam("computeSize") boolean computeSize) throws NoSuchFieldException, SecurityException,
             IllegalArgumentException, IllegalAccessException {
         ObjectVisitor v = new ObjectVisitor();
         v.visit(getState(viewId, sequenceId));
@@ -107,23 +103,19 @@ public class StateManagerHandler extends DefaultObject {
     @GET
     @Produces("text/html")
     @Path(value = "uiComponent/{viewId}/{sequenceId}/{path}")
-    public Object viewUIComponent(@PathParam("viewId")
-    String viewId, @PathParam("sequenceId")
-    String sequenceId, @PathParam("path")
-    String path) throws NoSuchFieldException, SecurityException,
-            IllegalArgumentException, IllegalAccessException {
+    public Object viewUIComponent(@PathParam("viewId") String viewId, @PathParam("sequenceId") String sequenceId,
+            @PathParam("path") String path) throws NoSuchFieldException, SecurityException, IllegalArgumentException,
+            IllegalAccessException {
         MonitorNode rootNode = getMonitorNode(viewId, sequenceId);
         MonitorNode childNode = rootNode.getChild(path.split(":"));
-        UIComponentWrapper comp = new UIComponentWrapper(childNode.getId(),
-                (Object[]) childNode.getStateReference());
+        UIComponentWrapper comp = new UIComponentWrapper(childNode.getId(), (Object[]) childNode.getStateReference());
 
         Map<String, Object> args = getArguments(childNode, comp, path);
         return getView("uiComponent").args(args);
     }
 
     @SuppressWarnings("boxing")
-    protected Map<String, Object> getArguments(MonitorNode node,
-            UIComponentWrapper comp, String path) {
+    protected Map<String, Object> getArguments(MonitorNode node, UIComponentWrapper comp, String path) {
         Map<String, Object> args = new HashMap<String, Object>();
         args.put("id", comp.getId());
         args.put("path", path);
@@ -137,15 +129,13 @@ public class StateManagerHandler extends DefaultObject {
     @GET
     @Produces("text/html")
     @Path(value = "uiAliasHolder/{viewId}/{sequenceId}/{path}")
-    public Object viewUIAliasHolder(@PathParam("viewId")
-    String viewId, @PathParam("sequenceId")
-    String sequenceId, @PathParam("path")
-    String path) throws NoSuchFieldException, SecurityException,
-            IllegalArgumentException, IllegalAccessException {
+    public Object viewUIAliasHolder(@PathParam("viewId") String viewId, @PathParam("sequenceId") String sequenceId,
+            @PathParam("path") String path) throws NoSuchFieldException, SecurityException, IllegalArgumentException,
+            IllegalAccessException {
         MonitorNode rootNode = getMonitorNode(viewId, sequenceId);
         MonitorNode childNode = rootNode.getChild(path.split(":"));
-        UIAliasHolderWrapper alias = new UIAliasHolderWrapper(
-                childNode.getId(), (Object[]) childNode.getStateReference());
+        UIAliasHolderWrapper alias = new UIAliasHolderWrapper(childNode.getId(),
+                (Object[]) childNode.getStateReference());
 
         Map<String, Object> args = getArguments(childNode, alias, path);
         args.put("aliasId", alias.getAliasId());
@@ -154,9 +144,8 @@ public class StateManagerHandler extends DefaultObject {
         return getView("uiAliasHolder").args(args);
     }
 
-    private MonitorNode getMonitorNode(String viewId, String sequenceId)
-            throws NoSuchFieldException, SecurityException,
-            IllegalArgumentException, IllegalAccessException {
+    private MonitorNode getMonitorNode(String viewId, String sequenceId) throws NoSuchFieldException,
+            SecurityException, IllegalArgumentException, IllegalAccessException {
         Object[] o = getState(viewId, sequenceId);
         return new MonitorNode(o[0], (Object[]) ((Object[]) o[1])[0]);
     }

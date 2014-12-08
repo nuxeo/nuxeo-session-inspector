@@ -25,17 +25,16 @@ import java.util.List;
  */
 public class StateReferenceHelper {
 
-    public static String getIdForNode(Object node) throws NoSuchFieldException,
-            SecurityException, IllegalArgumentException, IllegalAccessException {
+    public static String getIdForNode(Object node) throws NoSuchFieldException, SecurityException,
+            IllegalArgumentException, IllegalAccessException {
         Field idField = node.getClass().getDeclaredField("id");
         idField.setAccessible(true);
         String result = (String) idField.get(node);
         return result;
     }
 
-    public static Object getStateForPath(List<?> nodes, String[] path,
-            Object[] states) throws NoSuchFieldException, SecurityException,
-            IllegalArgumentException, IllegalAccessException {
+    public static Object getStateForPath(List<?> nodes, String[] path, Object[] states) throws NoSuchFieldException,
+            SecurityException, IllegalArgumentException, IllegalAccessException {
         for (int i = 0; i < nodes.size(); i++) {
             if (getIdForNode(nodes.get(i)).equals(path[0])) {
                 if (path.length == 1) {
@@ -43,9 +42,7 @@ public class StateReferenceHelper {
                 } else {
                     List<?> children = getChildrenForNode(nodes.get(i));
                     if (children != null) {
-                        return getStateForPath(children,
-                                Arrays.copyOfRange(path, 1, path.length),
-                                (Object[]) states[i]);
+                        return getStateForPath(children, Arrays.copyOfRange(path, 1, path.length), (Object[]) states[i]);
                     } else {
                         return null;
                     }
@@ -55,8 +52,7 @@ public class StateReferenceHelper {
         return null;
     }
 
-    public static List<?> getChildrenForNode(Object node)
-            throws NoSuchFieldException, SecurityException,
+    public static List<?> getChildrenForNode(Object node) throws NoSuchFieldException, SecurityException,
             IllegalArgumentException, IllegalAccessException {
         Field idField = node.getClass().getDeclaredField("children");
         idField.setAccessible(true);
@@ -69,8 +65,7 @@ public class StateReferenceHelper {
         return ((Object[]) temp[0])[1];
     }
 
-    public static String getTypeForNode(Object node)
-            throws NoSuchFieldException, SecurityException,
+    public static String getTypeForNode(Object node) throws NoSuchFieldException, SecurityException,
             IllegalArgumentException, IllegalAccessException {
         Field idField = node.getClass().getDeclaredField("type");
         idField.setAccessible(true);
