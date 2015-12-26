@@ -1,5 +1,3 @@
-package org.nuxeo.ecm.platform.sessioninspector;
-
 /*
  * (C) Copyright 2014 Nuxeo SA (http://nuxeo.com/) and contributors.
  *
@@ -16,6 +14,7 @@ package org.nuxeo.ecm.platform.sessioninspector;
  * Contributors:
  *     <a href="mailto:grenard@nuxeo.com">Guillaume</a>
  */
+package org.nuxeo.ecm.platform.sessioninspector;
 
 import javax.ws.rs.Path;
 
