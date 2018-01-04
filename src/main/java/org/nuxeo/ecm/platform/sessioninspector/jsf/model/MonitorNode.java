@@ -192,11 +192,9 @@ public class MonitorNode {
         return result;
     }
 
+    @Override
     public String toString() {
-        if (stateReference != null) {
-            return stateReference.toString();
-        }
-        return null;
+        return String.valueOf(stateReference);
     }
 
 }
